@@ -269,6 +269,61 @@ export const GeometryCanvas: React.FC<GeometryCanvasProps> = ({
             }
         }
     }
+    else if (tool === ToolType.TANGENT && selectedId) {
+        const prev = objects.find(o => o.id === selectedId);
+        if (prev) {
+             let p: GeoPoint | null = null;
+             let c: GeoConic | null = null;
+             if (prev.type === ObjectType.POINT && obj.type === ObjectType.CONIC) {
+                 p = prev as GeoPoint; c = obj as GeoConic;
+             } else if (prev.type === ObjectType.CONIC && obj.type === ObjectType.POINT) {
+                 c = prev as GeoConic; p = obj as GeoPoint;
+             }
+
+             if (p && c) {
+                 // 1. Create hidden polar line
+                 const polarId = crypto.randomUUID();
+                 const polar: GeoLine = {
+                     id: polarId,
+                     type: ObjectType.LINE,
+                     name: `Polar(${p.name})`,
+                     color: '#666',
+                     isFree: false, a:0, b:0, c:0,
+                     dependencies: [p.id, c.id],
+                     hidden: true
+                 };
+
+                 // 2. Create intersection points (tangency points)
+                 const t1Id = crypto.randomUUID();
+                 const t1: GeoPoint = {
+                     id: t1Id, type: ObjectType.POINT, name: `T1`, color: '#d1d5db',
+                     x:0, y:0, isFree: false, dependencies: [polarId, c.id], solutionIndex: 0
+                 };
+                 const t2Id = crypto.randomUUID();
+                 const t2: GeoPoint = {
+                     id: t2Id, type: ObjectType.POINT, name: `T2`, color: '#d1d5db',
+                     x:0, y:0, isFree: false, dependencies: [polarId, c.id], solutionIndex: 1
+                 };
+
+                 // 3. Create tangent lines
+                 const l1: GeoLine = {
+                     id: crypto.randomUUID(), type: ObjectType.LINE, name: `Tan1(${p.name})`, color: '#a78bfa',
+                     isFree: false, a:0, b:0, c:0, p1Id: p.id, p2Id: t1Id
+                 };
+                 const l2: GeoLine = {
+                     id: crypto.randomUUID(), type: ObjectType.LINE, name: `Tan2(${p.name})`, color: '#a78bfa',
+                     isFree: false, a:0, b:0, c:0, p1Id: p.id, p2Id: t2Id
+                 };
+
+                 onAdd(polar);
+                 onAdd(t1);
+                 onAdd(t2);
+                 onAdd(l1);
+                 onAdd(l2);
+                 onSelect(null);
+             }
+        }
+    }
     else if (tool === ToolType.POLAR && selectedId && obj.type === ObjectType.CONIC) {
         const prev = objects.find(o => o.id === selectedId);
         if (prev && prev.type === ObjectType.POINT) {
@@ -520,6 +575,8 @@ export const GeometryCanvas: React.FC<GeometryCanvasProps> = ({
   };
 
   const renderObject = (obj: GeoEntity) => {
+    if (obj.hidden) return null; // Ensure hidden objects are not rendered
+
     if (obj.type === ObjectType.CONIC) {
         const { cx, cy, a, b, rotation, conicType, color } = obj;
         const isSelected = selectedId === obj.id;
@@ -587,7 +644,6 @@ export const GeometryCanvas: React.FC<GeometryCanvasProps> = ({
              )
         }
     } else if (obj.type === ObjectType.POINT) {
-        if (obj.hidden) return null; // Don't render hidden points
         const isSelected = selectedId === obj.id;
         const canDrag = obj.isFree || !!obj.onLineId;
         return (

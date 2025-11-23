@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X, MousePointer2, Circle, Minus, Diamond, PenTool, Triangle, XCircle } from 'lucide-react';
+import { X, MousePointer2, Circle, Minus, Diamond, PenTool, Triangle, XCircle, Slash } from 'lucide-react';
 
 interface HelpModalProps {
   isOpen: boolean;
@@ -68,6 +68,15 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 </div>
                 <p className="text-sm text-gray-400">
                   Select this tool, then click two objects (Line + Line or Line + Conic) to generate intersection points.
+                </p>
+              </div>
+
+              <div className="bg-gray-800/40 p-4 rounded-xl border border-gray-700/50 hover:border-gray-600 transition-colors">
+                <div className="flex items-center gap-2 mb-2 text-white">
+                  <Slash size={20} className="text-blue-400" /> <span className="font-bold">Tangent</span>
+                </div>
+                <p className="text-sm text-gray-400">
+                   Select this tool, then click a <span className="text-white font-semibold">Point</span> and a <span className="text-white font-semibold">Conic</span> to create tangent lines from the point to the conic.
                 </p>
               </div>
             </div>

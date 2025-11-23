@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MousePointer2, Circle, Minus, Diamond, PenTool, Triangle, XCircle, HelpCircle, Eraser } from 'lucide-react';
+import { MousePointer2, Circle, Minus, Diamond, PenTool, Triangle, XCircle, HelpCircle, Eraser, Slash } from 'lucide-react';
 import { ToolType } from '../types';
 
 interface ToolbarProps {
@@ -18,6 +18,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ currentTool, setTool, onOpenHe
     { id: ToolType.LINE, icon: Minus, label: 'Line', shortcut: 'L' },
     { id: ToolType.CONIC, icon: Diamond, label: 'Conic', shortcut: 'C' },
     { id: ToolType.INTERSECT, icon: XCircle, label: 'Intersect', shortcut: 'I' },
+    { id: ToolType.TANGENT, icon: Slash, label: 'Tangent', shortcut: 'A' },
     { id: ToolType.POLAR, icon: PenTool, label: 'Polar Line', shortcut: 'O' },
     { id: ToolType.TRIANGLE, icon: Triangle, label: 'Self-Polar Triangle', shortcut: 'T' },
     { id: ToolType.ERASER, icon: Eraser, label: 'Eraser', shortcut: 'E' },

@@ -4,6 +4,7 @@ export enum ToolType {
   POINT = 'POINT',
   LINE = 'LINE',
   CONIC = 'CONIC',
+  TANGENT = 'TANGENT',
   POLAR = 'POLAR',
   TRIANGLE = 'TRIANGLE',
   INTERSECT = 'INTERSECT',
